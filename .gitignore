@@ -1,0 +1,6 @@
+.coverage
+.env/
+.pytest_cache/
+docs/build/
+sample.mind
+wackywango/data/
