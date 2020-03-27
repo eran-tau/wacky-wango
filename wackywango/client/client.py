@@ -16,4 +16,7 @@ class Client:
 	def upload_sample(self):
 		reader = Reader(self.path)
 		for snapshot in reader:
+			# snapshot.snapshot.ClearField("color_image")
+			# snapshot.snapshot.ClearField("depth_image")
+
 			r = requests.post('http://'+self.host+':'+str(self.port)+'/snapshot', data=snapshot.SerializeToString())

@@ -1,10 +1,9 @@
-
 import os
 import sys
 import traceback
 import click
 
-import wackywango.parsers
+import wackywango.api
 
 
 class Log:
@@ -33,19 +32,18 @@ def main(quiet=False, traceback=False):
     log.traceback = traceback
 
 
-@main.command('parse')
-@click.argument('parser_type')
-@click.argument('data')
-def parse(parser_type,data):
-    log(wackywango.parsers.parse(parser_type,data))
-
-
-@main.command('run-parser')
-@click.argument('parser_type')
-@click.argument('url')
-def run_parser(parser_type,url):
-    log(wackywango.parsers.run_parser(parser_type,url))
-
+@main.command('run-server')
+@click.option('--host', '-h',
+              default="127.0.0.1",
+              show_default='127.0.0.1')
+@click.option('--port', '-p',
+              default="5000",
+              show_default='5000')
+@click.option('--database', '-d',
+              default="postgresql://127.0.0.1:5432",
+              show_default='postgresql://127.0.0.1:5432')
+def run_server(host,port,database):
+    log(wackywango.api.run_api_server(host, port, database))
 
 if __name__ == '__main__':
     try:

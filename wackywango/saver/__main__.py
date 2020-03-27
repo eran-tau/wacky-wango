@@ -4,7 +4,7 @@ import sys
 import traceback
 import click
 
-import wackywango.parsers
+import wackywango.saver
 
 
 class Log:
@@ -33,18 +33,21 @@ def main(quiet=False, traceback=False):
     log.traceback = traceback
 
 
-@main.command('parse')
+@main.command('save')
+@click.option('--database', '-d',
+              default="postgresql://127.0.0.1:5432",
+              show_default='postgresql://127.0.0.1:5432')
 @click.argument('parser_type')
 @click.argument('data')
-def parse(parser_type,data):
-    log(wackywango.parsers.parse(parser_type,data))
+def save(parser_type,data):
+    log(wackywango.saver.save_once(parser_type,data))
 
 
-@main.command('run-parser')
-@click.argument('parser_type')
-@click.argument('url')
-def run_parser(parser_type,url):
-    log(wackywango.parsers.run_parser(parser_type,url))
+@main.command('run-saver')
+@click.argument('database_url')
+@click.argument('queue_url')
+def run_saver(database_url,queue_url):
+    log(wackywango.saver.run_saver(database_url,queue_url))
 
 
 if __name__ == '__main__':

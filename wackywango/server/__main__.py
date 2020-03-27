@@ -5,6 +5,8 @@ import click
 
 import wackywango.server
 
+#TODO refactor this out.. not sure if it ok to externalize run server from cli... maybe should have logic here? maybe run server should have param from where it started
+from .server import run_server_from_cli
 
 class Log:
 
@@ -41,7 +43,7 @@ def main(quiet=False, traceback=False):
               show_default='8000')
 @click.argument('publish')
 def run_server(host,port,publish):
-    log(wackywango.server.run_server(host, port, publish))
+    log(run_server_from_cli(host, port, publish))
 
 if __name__ == '__main__':
     try:

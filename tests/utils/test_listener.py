@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from wackywango.utils import Listener
+from wackywango.queue import Listener
 
 _PORT = 1234
 _HOST = '127.0.0.1'

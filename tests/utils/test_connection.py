@@ -4,7 +4,7 @@ import time
 import pytest
 
 
-from wackywango.utils import Connection
+from wackywango.queue import Connection
 
 
 _PORT = 1234
