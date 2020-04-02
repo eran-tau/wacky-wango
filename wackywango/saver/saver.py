@@ -1,8 +1,7 @@
-import pika
 from ..proto import cortex_pb2
-import uuid
-import sqlalchemy as db
-from datetime import datetime as dt
+from ..database import Database
+from ..queue import Queue
+import json
 
 class Saver:
     def __init__(self, database_url):
@@ -14,62 +13,22 @@ def save_once():
 
 def run_saver(database_url, queue_url):
     def callback(channel, method, properties, body):
-        print("consumed")
-        upload_snapshot = cortex_pb2.UploadParserResult()
-        upload_snapshot.ParseFromString(body)
-        # if channel == 'color-image':
-        save_result(upload_snapshot)
+        data = json.loads(body)
+        save_result(data,database_url)
 
-    params = pika.URLParameters(queue_url)
-    # params = pika.ConnectionParameters(url)
-    connection = pika.BlockingConnection(params)
-    channel = connection.channel()
-    channel.queue_declare(queue='color-image')
-
-    channel.basic_consume(
-        queue='color-image',
-        auto_ack=True,
-        on_message_callback=callback,
-    )
-    print("hello")
-
-    channel.start_consuming()
+    url = queue_url
+    queue = Queue(url)
+    queue.consume('exchange','parsed.*',callback)
 
 
-def save_result(result):
-    print(result)
-    engine = db.create_engine('postgresql://postgres:password@localhost/db')
-    metadata = db.MetaData()
-    users = db.Table('users', metadata,
-        db.Column('id', db.Integer, primary_key=True),
-        db.Column('username', db.String, nullable=False),
-        db.Column('birthday', db.DateTime, nullable=False),
-    )
-    snapshots = db.Table('snapshots', metadata,
-         db.Column('id', db.Integer, primary_key=True),
-         db.Column('parser_type', db.String, nullable=False),
-         db.Column('data', db.String, nullable=False),
-     )
+def save_result(result,database_url):
+    url = database_url
+    database = Database(url)
+    user = database.get_user(result['user_data']['userId'])
+    if not user:
+        database.create_user(result['user_data']['userId'],result['user_data']['username'],result['user_data']['birthday'])
 
-
-    metadata.create_all(engine)
-    connection = engine.connect()
-    query = db.select([users]).where(users.columns.id == result.user.user_id)
-    ResultProxy = connection.execute(query)
-    ResultSet = ResultProxy.fetchall()
-
-    if not ResultSet:
-        insert = users.insert().values(id=result.user.user_id, username=result.user.username,birthday=dt.fromtimestamp(result.user.birthday))
-        result2 = connection.execute(insert)
-        result2.inserted_primary_key
-        print("adding user")
-
-    if (result.parser_type == cortex_pb2.ParserType.TypeColorImage):
-        insert2 = snapshots.insert().values(parser_type=result.parser_type,
-                                       data=result.data.decode())
-        result3 = connection.execute(insert2)
-        result3.inserted_primary_key
-        print("adding snapshot")
+    database.add_snapshot(result['snapshot_timestamp'],result['parser_type'],result['snapshot_data'])
 
 
 

@@ -1,21 +1,9 @@
 syntax = "proto3";
 
+
 message UploadSnapshot {
     User user = 1;
     Snapshot snapshot = 2;
-}
-
-enum ParserType {
-        TypePose = 0;
-        TypeColorImage = 1;
-        TypeDepthImage = 2;
-        TypeFeelings = 3;
-    }
-
-message UploadParserResult{
-    User user = 1;
-    ParserType parser_type = 2;
-    bytes data = 3;
 }
 
 message User {
