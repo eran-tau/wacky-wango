@@ -13,11 +13,11 @@ queue_keys = ['pose','color_image','depth_image','feelings']
 def run_server_from_cli(host,port,url):
     def my_publish(message):
         queue = Queue(url)
-        unique_filename = "raw_data/" + str(uuid.uuid4())
+        unique_filename = "/tmp/wackywangodata/raw_data/" + str(uuid.uuid4())
         newFile = open(unique_filename, "wb")
         newFile.write(message.SerializeToString())
         for key in queue_keys:
-            if message.snapshot.HasField(key):
+            if message.snapshot.HasField(key) and  getattr(message.snapshot, key).ByteSize() > 0 :
                 queue.publish('exchange','raw.'+key, {"data":unique_filename,"parser_type":key})
     run_server(host,port,my_publish)
 

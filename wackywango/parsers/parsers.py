@@ -1,5 +1,3 @@
-from .image_parser import parse_color_image
-from .image_parser import parse_depth_image
 from ..proto import cortex_pb2
 from ..queue import Queue
 from google.protobuf.json_format import MessageToJson
@@ -49,9 +47,12 @@ class Context:
         return
 
     def save(self,data):
-        unique_filename = "pics/" + self.parser_type + "/" + str(uuid.uuid4()) + ".jpg"
+        unique_filename = self.get_save_path()
         data.save(unique_filename)
         return unique_filename
+
+    def get_save_path(self):
+        return "/tmp/wackywangodata/pics/" + self.parser_type + "/" + str(uuid.uuid4()) + ".jpg"
 
     def prepare_result(self,data,snapshot_timestamp):
         if not self.result:

@@ -3,7 +3,8 @@
 .pytest_cache/
 docs/build/
 sample.mind
-data/
 build/
 .idea/
 dist/
+sample/
+wacky_wango.egg-info/

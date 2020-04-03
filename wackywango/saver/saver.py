@@ -28,7 +28,7 @@ def save_result(result,database_url):
     if not user:
         database.create_user(result['user_data']['userId'],result['user_data']['username'],result['user_data']['birthday'])
 
-    database.add_snapshot(result['snapshot_timestamp'],result['parser_type'],result['snapshot_data'])
+    database.add_snapshot(result['user_data']['userId'],result['snapshot_timestamp'],result['parser_type'],result['snapshot_data'])
 
 
 
