@@ -92,12 +92,10 @@ function load_snapshots(user_id){
 
 function load_snapshot(user_id,snapshot_id){
     $.ajax({url: api_url+"/users/"+user_id+"/snapshots/"+snapshot_id, success: function(result){
-    console.log(result.result.snapshot_timestamp);
         var myDate = new Date(parseInt(result.result.snapshot_timestamp));
         $("#snapshot-details").append('<div>'+myDate.toGMTString()+'</div>');
         jQuery.each(result.result.snapshot_types, function(id, parser_type) {
             $.ajax({url: api_url+"/users/"+user_id+"/snapshots/"+snapshot_id+"/"+parser_type.parser_type+"/", success: function(parser_data){
-                console.log(parser_data.result);
                 if ((parser_type.parser_type == "color_image") || (parser_type.parser_type == "depth_image")) {
                     $("#snapshot-details").append('<img src="'+parser_data.result+'"/>');
                 }
@@ -123,6 +121,7 @@ function load_feelings_chart(user_id){
     hunger_graph = [];
     thirst_graph = [];
 
+    //I couldnt make $.when work to resolve the promises. I ended with a lame implementation...
     counter_obj = {"cnt":0,"total":-1}
 
     $.ajax({url: api_url+"/users/"+user_id+"/snapshots", success: function(result){
@@ -142,8 +141,6 @@ function load_feelings_chart(user_id){
 }
 
 function create_chart_when_ready(labels,exhaustion_graph,happiness_graph,hunger_graph,thirst_graph,counter_obj){
-                console.log(counter_obj);
-
     if (counter_obj['cnt']==counter_obj['total']){
         create_chart(labels,exhaustion_graph,happiness_graph,hunger_graph,thirst_graph);
     } else {
@@ -156,11 +153,7 @@ function create_chart_when_ready(labels,exhaustion_graph,happiness_graph,hunger_
 
 async function create_chart(labels,exhaustion_graph,happiness_graph,hunger_graph,thirst_graph){
   // Graphs
-  console.log(labels);
-
   labels = labels.sort();
-
-  console.log(labels);
 
   var ctx = document.getElementById('myChart')
   // eslint-disable-next-line no-unused-vars

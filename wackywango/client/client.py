@@ -1,6 +1,5 @@
 from .reader import Reader
 import requests
-import json
 
 def upload_sample(host,port,path):
 	client = Client(host,port,path)
