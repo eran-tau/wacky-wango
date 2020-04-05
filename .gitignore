@@ -8,3 +8,4 @@ build/
 dist/
 sample/
 wacky_wango.egg-info/
+data/

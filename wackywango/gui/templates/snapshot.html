@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+hello
+{% endblock %}
+
+{% block content %}
+
+      <h2>Results for Snapshot: {{snapshot_id}} </h2>
+        <div id="snapshot-details">
+        </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/base.js"></script>
+<script>load_snapshot({{user_id}},{{snapshot_id}});</script>
+{% endblock %}
+

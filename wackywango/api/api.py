@@ -1,7 +1,10 @@
 from flask import Flask
 from flask import current_app
-from ..database import Database
+from flask_cors import CORS
 from flask import jsonify
+import json
+
+from ..database import Database
 
 def run_api_server(host,port,database):
     server.start(host,port,database)
@@ -15,13 +18,14 @@ class Server:
 
 server = Server()
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/users/', methods=['GET'])
 def get_users():
     db = current_app.config['database']
 
-    return repr(db.get_all_users())
+    return jsonify({'result': dict(db.get_all_users())})
+
 
 
 @app.route('/users/<int:user_id>/', methods=['GET'])
@@ -50,5 +54,8 @@ def get_snapshot_for_user(user_id,snapshot_id):
 def get_snapshot_data_for_user(user_id,snapshot_id,result_name):
     db = current_app.config['database']
     snapshots = db.get_snapshot_data(user_id,snapshot_id,result_name)
-    return jsonify({'result': dict(snapshots[0])})
+    result_data = snapshots[0]['data']
+    if result_name in ('color_image','depth_image'):
+        result_data = result_data.replace('/tmp/wackywangodata','/static/')
+    return jsonify({'result': json.loads(result_data)})
 
