@@ -34,6 +34,8 @@ Final Advanced Computer Design mind reading project. See [full documentation](ht
 
 ## Usage
 
+By default export WACKYWANGO_CONFIG='kuku'
+
 The `foobar` packages provides the following classes:
 
 - `Foo`

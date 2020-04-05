@@ -6,6 +6,9 @@ import json
 import importlib
 import sys
 import pathlib
+from ..config import Config
+
+config = Config()
 
 
 class Parser:
@@ -50,7 +53,7 @@ class Context:
         return unique_filename
 
     def get_save_path(self):
-        return "/tmp/wackywangodata/pics/" + self.parser_type + "/" + str(uuid.uuid4()) + ".jpg"
+        return config.data['path']+"/pics/" + self.parser_type + "/" + str(uuid.uuid4()) + ".jpg"
 
     def prepare_result(self,data,snapshot_timestamp):
         if not self.result:

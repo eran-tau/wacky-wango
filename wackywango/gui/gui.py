@@ -1,8 +1,9 @@
 from flask import Flask
 from flask import render_template
+import os
+from ..config import Config
 
-
-
+config = Config()
 
 def run_server(host, port, api_host, api_port):
     server.start(host, port, api_host, api_port)
@@ -12,6 +13,11 @@ class Server:
     def start(self, host, port, api_host, api_port):
         app.config['api_host'] = api_host
         app.config['api_port'] = api_port
+        # Create symlonk for static images
+        try:
+            os.symlink(config.data['path'] + '/pics/', 'wackywango/gui/static/pics')
+        except:
+            print("symlink already exists")
         app.run(host, port)
 
 

@@ -3,8 +3,10 @@ from flask import current_app
 from flask_cors import CORS
 from flask import jsonify
 import json
-
+from ..config import Config
 from ..database import Database
+
+config = Config()
 
 def run_api_server(host,port,database):
     server.start(host,port,database)
@@ -56,6 +58,6 @@ def get_snapshot_data_for_user(user_id,snapshot_id,result_name):
     snapshots = db.get_snapshot_data(user_id,snapshot_id,result_name)
     result_data = snapshots[0]['data']
     if result_name in ('color_image','depth_image'):
-        result_data = result_data.replace('/tmp/wackywangodata','/static/')
+        result_data = result_data.replace(config.data['path'],'/static')
     return jsonify({'result': json.loads(result_data)})
 

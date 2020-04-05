@@ -13,6 +13,7 @@ def parse(parser_type,data):
 
 def run_parser(parser_type,url):
     def callback(channel, method, properties, body):
+        print(f'consumed {body}')
         queue_data = json.loads(body)
         results = parser.parse(queue_data['parser_type'],queue_data['data'])
         for result in results:
