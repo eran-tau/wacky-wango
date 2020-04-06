@@ -3,7 +3,7 @@
 
 # Wacky Wango
 
-Final Advanced Computer Design mind reading project. See [full documentation](https://wacky-wango.readthedocs.io/en/latest/).
+Final Advanced Computer Design mind reading project. See [full documentation](https://wacky-wango.readthedocs.io/en/latest/). (Not implemented yet)
 
 ## Installation
 
@@ -21,7 +21,7 @@ Final Advanced Computer Design mind reading project. See [full documentation](ht
     $ ./scripts/install.sh
     ...
     $ source .env/bin/activate
-    [foobar] $ # you're good to go!
+    [wackywango] $ # you're good to go!
     ```
 
 3. To check that everything is working as expected, run the tests:
@@ -31,42 +31,86 @@ Final Advanced Computer Design mind reading project. See [full documentation](ht
     $ pytest tests/
     ...
     ```
+    
+Depending on your local setup, you might need to install docker and some other stuff:
+    
+    
+    ```sh
+    $ sudo apt-get install postgresql
+    $ sudo apt-get install python-psycopg2
+    $ sudo apt-get install libpq-dev
+    ```
+
 
 ## Usage
 
-By default export WACKYWANGO_CONFIG='kuku'
+The easiest way to see that everything is working is to use the run-pipeline which will run everything on docker:
 
-The `foobar` packages provides the following classes:
-
-- `Foo`
-
-    This class encapsulates the concept of `foo`, and returns `"foo"` when run.
-
-    In addition, it provides the `inc` method to increment integers, and the
-    `add` method to sum them.
-
-    ```pycon
-    >>> from foobar import Foo
-    >>> foo = Foo()
-    >>> foo.run()
-    'foo'
-    >>> foo.inc(1)
-    2
-    >>> foo.add(1, 2)
-    3
+    ```sh
+    $ sudo ./run-pipeline.sh
+    ...
     ```
 
-- `Bar`
 
-    This class encapsulates the concept of `bar`; it's very similar to `Foo`,
-    except it returns `"bar"` when run.
+Once it's done, you'll need to upload some data into the system. The repo provides a very small sample you can use or download a real sample file from [here](https://storage.googleapis.com/advanced-system-design/sample.mind.gz) 
+To uploaded the sample (Either the one provided or the one you downloaded), use:
 
-    ```pycon
-    >>> from foobar import Bar
-    >>> bar = Bar()
-    >>> bar.run()
-    'bar'
+    ```sh
+    $ python -m wackywango.client upload-sample -h '127.0.0.1' -p 8000 'sample/small_sample.mind.gz'
     ```
+
+Once done, just go to: http://127.0.0.1:8080/ and enjoy
+
+## Detailed Usage
+
+
+The `wackywango` packages provides the following modules:
+
+- `client`
+    
+    The client is used to upload sample data to the server. Example:
+    
+    ```sh
+    $ python -m wackywango.client upload-sample -h '127.0.0.1' -p 8000 'sample/small_sample.mind.gz'
+    ```
+
+- `server`
+
+
+    The server is used to get the data, and populate it to a rabbitmq with the relevant parsed data. 
+    
+    
+    ```sh
+    $ python -m wackywango.server run-server -h '0.0.0.0' -p 8000 'rabbitmq://rabbitmq-server:5672/'
+    ```
+
+- `parsers`
+    
+    The parser module loads predefined parsers into the system that listen to the queue, and parse the relevant information. 
+    
+    ```sh
+    $ python -m wackywango.parsers run-parser 'color_image' 'rabbitmq://rabbitmq-server:5672/'
+    ```
+
+
+- `saver`
+    
+    The saver saves the results from the parser into postgres db. 
+    
+    ```sh
+    $ python -m wackywango.saver run-saver  'postgresql://postgres-server:5432' 'rabbitmq://rabbitmq-server:5672/'
+    ```
+
+- `api`
+    
+    api provides some useful functionality to get the data saved in the db. [Full API below](#API). 
+ 
+    ```sh
+    $ python -m wackywango.saver run-saver  'postgresql://postgres-server:5432' 'rabbitmq://rabbitmq-server:5672/'
+    ```
+
+#API
+   
 
 The `foobar` package also provides a command-line interface:
 
