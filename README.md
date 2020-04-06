@@ -26,25 +26,22 @@ Final Advanced Computer Design mind reading project. See [full documentation](ht
 
 3. To check that everything is working as expected, run the tests:
 
-
     ```sh
     $ pytest tests/
     ...
     ```
     
-Depending on your local setup, you might need to install docker and some other stuff:
-    
-    
+4. Depending on your local setup, you might need to install docker and some other stuff:
+
     ```sh
     $ sudo apt-get install postgresql
     $ sudo apt-get install python-psycopg2
     $ sudo apt-get install libpq-dev
     ```
-
-
+    
 ## Usage
 
-The easiest way to see that everything is working is to use the run-pipeline which will run everything on docker:
+1. The easiest way to see that everything is working is to use the run-pipeline which will run everything on docker:
 
     ```sh
     $ sudo ./run-pipeline.sh
@@ -52,14 +49,15 @@ The easiest way to see that everything is working is to use the run-pipeline whi
     ```
 
 
-Once it's done, you'll need to upload some data into the system. The repo provides a very small sample you can use or download a real sample file from [here](https://storage.googleapis.com/advanced-system-design/sample.mind.gz) 
+2. You'll need to upload some data into the system. The repo provides a very small sample you can use or download a real sample file from [here](https://storage.googleapis.com/advanced-system-design/sample.mind.gz) 
 To uploaded the sample (Either the one provided or the one you downloaded), use:
+
 
     ```sh
     $ python -m wackywango.client upload-sample -h '127.0.0.1' -p 8000 'sample/small_sample.mind.gz'
     ```
 
-Once done, just go to: http://127.0.0.1:8080/ and enjoy
+3. Once done, just go to: http://127.0.0.1:8080/ and enjoy
 
 ## Detailed Usage
 
@@ -76,9 +74,7 @@ The `wackywango` packages provides the following modules:
 
 - `server`
 
-
-    The server is used to get the data, and populate it to a rabbitmq with the relevant parsed data. 
-    
+    The server is used to get the data, and populate it to a rabbitmq with the relevant parsed data.     
     
     ```sh
     $ python -m wackywango.server run-server -h '0.0.0.0' -p 8000 'rabbitmq://rabbitmq-server:5672/'
@@ -109,7 +105,7 @@ The `wackywango` packages provides the following modules:
     $ python -m wackywango.saver run-saver  'postgresql://postgres-server:5432' 'rabbitmq://rabbitmq-server:5672/'
     ```
 
-#API
+## API
    
 
 The `foobar` package also provides a command-line interface:
