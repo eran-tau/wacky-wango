@@ -74,6 +74,7 @@ def test_server_message_queue(tmp_path, patched_requests):
 
     # Upload the sample
     upload_sample(host, port2, 'tests/small_sample.mind.gz')
+    time.sleep(2)
 
     p = tmp_path / "test2"
     f = open(p, "r")
