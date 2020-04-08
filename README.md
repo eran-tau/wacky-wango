@@ -54,7 +54,7 @@ To uploaded the sample (Either the one provided or the one you downloaded), use:
 
 
     ```sh
-    $ python -m wackywango.client upload-sample -h '127.0.0.1' -p 8000 'sample/small_sample.mind.gz'
+    $ python -m wackywango.client upload-sample -h '127.0.0.1' -p 8000 'tests/small_sample.mind.gz'
     ```
 
 3. Once done, just go to: http://127.0.0.1:8080/ and enjoy
