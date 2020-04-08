@@ -48,7 +48,7 @@ def test_server_read_message(tmp_path):
                           args=(host, port1, publish_test_method(p)))
     test_server.start()
 
-    time.sleep(2)
+    time.sleep(1)
     # Upload the sample
     upload_sample(host, port1, 'tests/small_sample.mind.gz')
 
@@ -59,22 +59,20 @@ def test_server_read_message(tmp_path):
 
     test_server.terminate()
     test_server.join()
-    time.sleep(2)
 
 
 
 def test_server_message_queue(tmp_path, patched_requests):
+    pass
     # Start the server
     time.sleep(1)
-
+    print(tmp_path)
     test_server = Process(target=server.run_server_from_cli,
                           args=(host, port2, "rabbitmq://0.0.0.0:1234"))
     test_server.start()
-    time.sleep(2)
 
     # Upload the sample
     upload_sample(host, port2, 'tests/small_sample.mind.gz')
-    time.sleep(2)
 
     p = tmp_path / "test2"
     f = open(p, "r")
@@ -84,4 +82,3 @@ def test_server_message_queue(tmp_path, patched_requests):
     # Make sure the server got the message
     test_server.terminate()
     test_server.join()
-    time.sleep(2)
