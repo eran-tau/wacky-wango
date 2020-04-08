@@ -4,7 +4,7 @@ from wackywango.queue import Queue
 
 from wackywango.client import upload_sample
 
-
+import time
 from multiprocessing import Process
 import json
 
@@ -50,6 +50,7 @@ def test_server_read_message(tmp_path):
                           args=(host, port, publish_test_method(p)))
     test_server.start()
 
+    time.sleep(5)
     # Upload the sample
     upload_sample(host, port, 'tests/small_sample.mind.gz')
 
@@ -68,6 +69,7 @@ def test_server_message_queue(tmp_path, patched_requests):
     test_server = Process(target=server.run_server_from_cli,
                           args=(host, port, "rabbitmq://0.0.0.0:1234"))
     test_server.start()
+    time.sleep(5)
 
     # Upload the sample
     upload_sample(host, port, 'tests/small_sample.mind.gz')
