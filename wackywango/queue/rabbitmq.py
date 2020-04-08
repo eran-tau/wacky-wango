@@ -1,6 +1,7 @@
 import pika
 import json
 
+
 class RabbitMQDriver:
 
     def __init__(self, url):
@@ -18,7 +19,7 @@ class RabbitMQDriver:
             body=json.dumps(message)
         )
 
-    def consume(self,exchange, binding_key,callback):
+    def consume(self, exchange, binding_key, callback):
         self.channel.exchange_declare(exchange=exchange, exchange_type='topic')
         result = self.channel.queue_declare('', exclusive=True)
         queue_name = result.method.queue
@@ -32,5 +33,3 @@ class RabbitMQDriver:
         )
 
         self.channel.start_consuming()
-
-

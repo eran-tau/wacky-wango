@@ -41,8 +41,9 @@ def main(quiet=False, traceback=False):
               default="8000",
               show_default='8000')
 @click.argument('snapshot')
-def client_upload_thought(host,port,snapshot):
+def client_upload_thought(host, port, snapshot):
     log(wackywango.client.upload_sample(host, port, snapshot))
+
 
 if __name__ == '__main__':
     try:

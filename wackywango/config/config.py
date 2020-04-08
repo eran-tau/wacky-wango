@@ -3,6 +3,7 @@ import os
 import pathlib
 import ast
 
+
 class Config:
     def __init__(self):
         path = os.environ.get('WACKYWANGO_CONFIG')
@@ -12,7 +13,6 @@ class Config:
         else:
             root = pathlib.Path(__file__).parent.absolute()
             self.config_parser.read(root / 'config.ini')
-
 
     def __getattr__(self, item):
         return self.config_parser[item]

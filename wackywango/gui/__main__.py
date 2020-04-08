@@ -45,8 +45,9 @@ def main(quiet=False, traceback=False):
 @click.option('--api-port', '-P',
               default="5000",
               show_default='5000')
-def run_server(host,port,api_host,api_port):
-    log(wackywango.gui.run_server(host,port,api_host,api_port))
+def run_server(host, port, api_host, api_port):
+    log(wackywango.gui.run_server(host, port, api_host, api_port))
+
 
 if __name__ == '__main__':
     try:

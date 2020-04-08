@@ -8,7 +8,7 @@ class Reader:
         self.path = path
         self.user = cortex_pb2.User()
         self.f = gzip.open(self.path, "rb")
-        size = self.read_int(4);
+        size = self.read_int(4)
         self.user.ParseFromString(self.f.read(size))
 
     def __iter__(self):
@@ -32,5 +32,3 @@ class Reader:
         upload_snapshot.snapshot.ParseFromString(self.f.read(size))
         upload_snapshot.user.CopyFrom(self.user)
         return upload_snapshot
-
-

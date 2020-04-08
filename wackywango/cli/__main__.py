@@ -35,7 +35,7 @@ log = Log()
 @click.option('-t', '--traceback', is_flag=True)
 @click.pass_context
 def main(context, host, port, quiet=False, traceback=False):
-    context.obj['cli'] = wackywango.cli.CLI(host,port)
+    context.obj['cli'] = wackywango.cli.CLI(host, port)
     log.quiet = quiet
     log.traceback = traceback
 
@@ -45,24 +45,28 @@ def main(context, host, port, quiet=False, traceback=False):
 def get_users(obj):
     log(obj['cli'].get_users())
 
+
 @main.command('get-user')
 @click.argument('user_id')
 @click.pass_obj
-def get_user(obj,user_id):
+def get_user(obj, user_id):
     log(obj['cli'].get_user(user_id))
+
 
 @main.command('get-snapshots')
 @click.argument('user_id')
 @click.pass_obj
-def get_snapshots(obj,user_id):
+def get_snapshots(obj, user_id):
     log(obj['cli'].get_snapshots(user_id))
+
 
 @main.command('get-snapshot')
 @click.argument('user_id')
 @click.argument('snapshot_id')
 @click.pass_obj
-def get_snapshot(obj,user_id,snapshot_id):
-    log(obj['cli'].get_snapshot(user_id,snapshot_id))
+def get_snapshot(obj, user_id, snapshot_id):
+    log(obj['cli'].get_snapshot(user_id, snapshot_id))
+
 
 @main.command('get-result')
 @click.argument('user_id')
@@ -70,9 +74,12 @@ def get_snapshot(obj,user_id,snapshot_id):
 @click.argument('parser_type')
 @click.option('--save', '-s')
 @click.pass_obj
-def get_result(obj,user_id,snapshot_id,parser_type,save):
+def get_result(obj, user_id, snapshot_id, parser_type, save):
     if save:
-        log(obj['cli'].get_result_and_save(user_id,snapshot_id,parser_type,save))
+        log(obj['cli'].get_result_and_save(user_id,
+                                           snapshot_id,
+                                           parser_type,
+                                           save))
     else:
         log(obj['cli'].get_result(user_id, snapshot_id, parser_type))
 

@@ -42,8 +42,9 @@ def main(quiet=False, traceback=False):
 @click.option('--database', '-d',
               default="postgresql://127.0.0.1:5432",
               show_default='postgresql://127.0.0.1:5432')
-def run_server(host,port,database):
+def run_server(host, port, database):
     log(wackywango.api.run_api_server(host, port, database))
+
 
 if __name__ == '__main__':
     try:

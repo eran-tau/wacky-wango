@@ -17,22 +17,23 @@ class CLI:
             return "Not Found"
 
     def get_users(self):
-        return self.call_api("users");
+        return self.call_api("users")
 
     def get_user(self, user_id):
-        return self.call_api("users/"+user_id);
+        return self.call_api("users/"+user_id)
 
     def get_snapshots(self, user_id):
-        return self.call_api("users/" + user_id+"/snapshots");
+        return self.call_api("users/" + user_id+"/snapshots")
 
     def get_snapshot(self, user_id, snapshot_id):
-        return self.call_api("users/" + user_id+"/snapshots/"+snapshot_id);
+        return self.call_api("users/" + user_id+"/snapshots/"+snapshot_id)
 
-    def get_result(self, user_id, snapshot_id,parser_type):
-        return self.call_api("users/" + user_id+"/snapshots/"+snapshot_id+'/'+parser_type);
+    def get_result(self, user_id, snapshot_id, parser_type):
+        return self.call_api("users/"+user_id+"/snapshots/" +
+                             snapshot_id+'/'+parser_type)
 
-    def get_result_and_save(self, user_id, snapshot_id,parser_type,path):
-        data = self.get_result(user_id, snapshot_id,parser_type)
+    def get_result_and_save(self, user_id, snapshot_id, parser_type, path):
+        data = self.get_result(user_id, snapshot_id, parser_type)
         file = open(path, 'w')
         file.write(data)
         file.close()

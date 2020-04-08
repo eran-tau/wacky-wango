@@ -39,15 +39,15 @@ def main(quiet=False, traceback=False):
               show_default='postgresql://127.0.0.1:5432')
 @click.argument('parser_type')
 @click.argument('data')
-def save(database,parser_type,data):
-    log(wackywango.saver.save_once(database,parser_type,data))
+def save(database, parser_type, data):
+    log(wackywango.saver.save_once(database, parser_type, data))
 
 
 @main.command('run-saver')
 @click.argument('database_url')
 @click.argument('queue_url')
-def run_saver(database_url,queue_url):
-    log(wackywango.saver.run_saver(database_url,queue_url))
+def run_saver(database_url, queue_url):
+    log(wackywango.saver.run_saver(database_url, queue_url))
 
 
 if __name__ == '__main__':

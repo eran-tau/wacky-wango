@@ -36,15 +36,15 @@ def main(quiet=False, traceback=False):
 @main.command('parse')
 @click.argument('parser_type')
 @click.argument('data')
-def parse(parser_type,data):
-    log(wackywango.parsers.parse(parser_type,data))
+def parse(parser_type, data):
+    log(wackywango.parsers.parse(parser_type, data))
 
 
 @main.command('run-parser')
 @click.argument('parser_type')
 @click.argument('url')
-def run_parser(parser_type,url):
-    log(wackywango.parsers.run_parser(parser_type,url))
+def run_parser(parser_type, url):
+    log(wackywango.parsers.run_parser(parser_type, url))
 
 
 if __name__ == '__main__':

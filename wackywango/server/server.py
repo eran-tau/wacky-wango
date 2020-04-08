@@ -10,19 +10,21 @@ config = Config()
 app = Flask(__name__)
 
 
-def run_server_from_cli(host,port,url):
+def run_server_from_cli(host, port, url):
     def my_publish(message):
         queue = Queue(url)
         unique_filename = config.data['path']+"/raw_data/" + str(uuid.uuid4())
         new_file = open(unique_filename, "wb")
         new_file.write(message.SerializeToString())
         for key in config.get_queue_keys():
-            if message.snapshot.HasField(key) and  getattr(message.snapshot, key).ByteSize() > 0 :
-                queue.publish('exchange','raw.'+key, {"data":unique_filename,"parser_type":key})
-    run_server(host,port,my_publish)
+            if message.snapshot.HasField(key) and \
+                    getattr(message.snapshot, key).ByteSize() > 0:
+                queue.publish('exchange', 'raw.'+key, {"data": unique_filename,
+                                                       "parser_type": key})
+    run_server(host, port, my_publish)
 
 
-def run_server(host,port,publish):
+def run_server(host, port, publish):
     app.config['publish'] = publish
     app.run(host, port)
 
@@ -33,5 +35,3 @@ def snapshot():
     upload_snapshot.ParseFromString(request.data)
     current_app.config['publish'](upload_snapshot)
     return 'OK'
-
-

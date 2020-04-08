@@ -8,7 +8,6 @@ class Queue:
     def publish(self, exchange, routing_key, message):
         return self._driver.publish(exchange, routing_key, message)
 
-
     def consume(self, exchange, binding_key, callback):
         self._driver.consume(exchange, binding_key, callback)
 
