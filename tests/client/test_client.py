@@ -14,6 +14,7 @@ sent_data = {}
 host = '127.0.0.1'
 port = '8000'
 
+
 @pytest.fixture
 def patched_requests(monkeypatch):
     # store a reference to the old get method
@@ -46,4 +47,3 @@ def test_user_attributes(patched_requests):
     assert upload_snapshot.user.user_id == user_id
     assert upload_snapshot.user.username == username
     assert upload_snapshot.user.birthday == birthday
-

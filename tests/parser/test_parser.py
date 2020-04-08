@@ -16,6 +16,9 @@ port = '8000'
 def test_loaded_parser():
     available_parsers = config.get_queue_keys()
     for parser in parsers.parser.parsers:
-        assert parser.parser_type in available_parsers, "loaded a parser type that is not in the available list of config, you should add it "+parser.parser_type
+        assert parser.parser_type in available_parsers, \
+            "loaded a parser type that is not in the available " \
+            "list of config, you should add it "+parser.parser_type
         available_parsers.remove(parser.parser_type)
-    assert len(available_parsers) == 0, "Missing parsers: " + repr(available_parsers)
+    assert len(available_parsers) == 0, \
+        "Missing parsers: " + repr(available_parsers)
