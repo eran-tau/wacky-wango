@@ -69,8 +69,14 @@ def test_server_read_message(tmp_path):
 def test_server_message_queue(tmp_path, patched_requests):
     # Start the server
 
-    os.mkdir(config.data['path'])
-    os.mkdir(config.data['path']+"/raw_data/")
+    try:
+        os.mkdir(config.data['path'])
+    except:
+        print("exists")
+    try:
+        os.mkdir(config.data['path']+"/raw_data/")
+    except:
+        print("exists")
 
 
     time.sleep(1)
