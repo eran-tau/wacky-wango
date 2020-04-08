@@ -12,9 +12,6 @@ user_id = 42
 username = "Dan Gittik"
 birthday = 699746400
 
-sent_data = {}
-cnt_feelings = 0
-
 host = '127.0.0.1'
 port1 = 8000
 port2 = 8001
@@ -26,7 +23,7 @@ def patched_requests(tmp_path, monkeypatch):
     def mocked_queue(uri, *args, **kwargs):
         p = tmp_path / "test2"
         w = open(p, "w")
-        w.write(json.dumps({'username': args[1]}))
+        w.write(json.dumps({'last_parser': args[1]}))
         w.close()
         return
 
@@ -67,8 +64,9 @@ def test_server_read_message(tmp_path):
 
 
 def test_server_message_queue(tmp_path, patched_requests):
-    global cnt_feelings
     # Start the server
+    time.sleep(1)
+
     test_server = Process(target=server.run_server_from_cli,
                           args=(host, port2, "rabbitmq://0.0.0.0:1234"))
     test_server.start()
@@ -80,7 +78,7 @@ def test_server_message_queue(tmp_path, patched_requests):
     p = tmp_path / "test2"
     f = open(p, "r")
     data = json.loads(f.read())
-    assert data['username'] == 'raw.feelings'
+    assert data['last_parser'] == 'raw.feelings'
 
     # Make sure the server got the message
     test_server.terminate()
