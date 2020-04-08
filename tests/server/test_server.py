@@ -16,7 +16,8 @@ sent_data = {}
 cnt_feelings = 0
 
 host = '127.0.0.1'
-port = 8000
+port1 = 8000
+port2 = 8001
 
 
 @pytest.fixture
@@ -47,12 +48,12 @@ def test_server_read_message(tmp_path):
         return test_publish_wrapper
     p = tmp_path / "test"
     test_server = Process(target=server.run_server,
-                          args=(host, port, publish_test_method(p)))
+                          args=(host, port1, publish_test_method(p)))
     test_server.start()
 
     time.sleep(2)
     # Upload the sample
-    upload_sample(host, port, 'tests/small_sample.mind.gz')
+    upload_sample(host, port1, 'tests/small_sample.mind.gz')
 
     # Make sure the server got the message
     f = open(p, "r")
@@ -69,12 +70,12 @@ def test_server_message_queue(tmp_path, patched_requests):
     global cnt_feelings
     # Start the server
     test_server = Process(target=server.run_server_from_cli,
-                          args=(host, port, "rabbitmq://0.0.0.0:1234"))
+                          args=(host, port2, "rabbitmq://0.0.0.0:1234"))
     test_server.start()
     time.sleep(2)
 
     # Upload the sample
-    upload_sample(host, port, 'tests/small_sample.mind.gz')
+    upload_sample(host, port2, 'tests/small_sample.mind.gz')
 
     p = tmp_path / "test2"
     f = open(p, "r")
