@@ -77,7 +77,7 @@ The `wackywango` packages provides the following modules:
     The server is used to get the data, and populate it to a rabbitmq with the relevant parsed data.     
     
     ```sh
-    $ python -m wackywango.server run-server -h '0.0.0.0' -p 8000 'rabbitmq://rabbitmq-server:5672/'
+    $ python -m wackywango.server run-server -h '0.0.0.0' -p 8000 'rabbitmq://127.0.0.1:5672/'
     ```
 
 - `parsers`
@@ -85,7 +85,7 @@ The `wackywango` packages provides the following modules:
     The parser module loads predefined parsers into the system that listen to the queue, and parse the relevant information. 
     
     ```sh
-    $ python -m wackywango.parsers run-parser 'color_image' 'rabbitmq://rabbitmq-server:5672/'
+    $ python -m wackywango.parsers run-parser 'color_image' 'rabbitmq://127.0.0.1:5672/'
     ```
 
 
@@ -94,7 +94,7 @@ The `wackywango` packages provides the following modules:
     The saver saves the results from the parser into postgres db. 
     
     ```sh
-    $ python -m wackywango.saver run-saver  'postgresql://postgres-server:5432' 'rabbitmq://rabbitmq-server:5672/'
+    $ python -m wackywango.saver run-saver  'postgresql://127.0.0.1:5432' 'rabbitmq://127.0.0.1:5672/'
     ```
 
 - `api`
@@ -102,17 +102,52 @@ The `wackywango` packages provides the following modules:
     api provides some useful functionality to get the data saved in the db. [Full API below](#API). 
  
     ```sh
-    $ python -m wackywango.saver run-saver  'postgresql://postgres-server:5432' 'rabbitmq://rabbitmq-server:5672/'
+    $ python -m wackywango.saver run-saver  'postgresql://127.0.0.1:5432' 'rabbitmq://127.0.0.1:5672/'
     ```
 
 ## API
    
+API server supports the following API:
+* `GET /users`
 
-The `foobar` package also provides a command-line interface:
+    Returns the list of all the supported users, including their IDs and names only.
+
+
+* `GET /users/user-id`
+
+    Returns the specified user's details: ID, name, birthday and gender.
+
+* `GET /users/user-id/snapshots`
+
+    Returns the list of the specified user's snapshot IDs and datetimes only.|
+
+
+* `GET /users/user-id/snapshots/snapshot-id`
+
+    Returns the specified snapshot's details: ID, datetime, and the available results' names only (e.g. pose).
+
+
+* `GET /users/user-id/snapshots/snapshot-id/result-name`
+
+    Returns the specified snapshot's result as a json. The result has some data url for binary data in case of binary data
+    
+   
+
+
+## CLI
+
+The `wackywango` package also provides a command-line interface service, each corresponding to an API:
 
 ```sh
-$ python -m foobar
-foobar, version 0.1.0
+$ python -m wackywango.cli get-users
+…
+$ python -m wackywango.cli get-user 1
+…
+$ python -m wackywango.cli get-snapshots 1
+…
+$ python -m wackywango.cli get-snapshot 1 2
+…
+$ python -m wackywango.cli get-result 1 2 'pose'
 ```
 
 All commands accept the `-q` or `--quiet` flag to suppress output, and the `-t`
@@ -120,55 +155,60 @@ or `--traceback` flag to show the full traceback when an exception is raised
 (by default, only the error message is printed, and the program exits with a
 non-zero code).
 
-The CLI provides the `foo` command, with the `run`, `add` and `inc`
-subcommands:
-
-```sh
-$ python -m foobar foo run
-foo
-$ python -m foobar foo inc 1
-2
-$ python -m foobar foo add 1 2
-3
-```
-
-The CLI further provides the `bar` command, with the `run` and `error`
-subcommands.
-
-Curiously enough, `bar`'s `run` subcommand accepts the `-o` or `--output`
-option to write its output to a file rather than the standard output, and the
-`-u` or `--uppercase` option to do so in uppercase letters.
-
-```sh
-$ python -m foobar bar run
-bar
-$ python -m foobar bar run -u
-BAR
-$ python -m foobar bar run -o output.txt
-$ cat output.txt
-BAR
-```
 
 Do note that each command's options should be passed to *that* command, so for
-example the `-q` and `-t` options should be passed to `foobar`, not `foo` or
-`bar`.
+example the `-q` and `-t` options should be passed to `wackywango.cli`, not `get-users` or
+`get-user` etc...
 
 ```sh
-$ python -m foobar bar run -q # this doesn't work
+$ python -m wackywango.cli get-users -q # this doesn't work
 ERROR: no such option: -q
-$ python -m foobar -q bar run # this does work
+$ python -m wackywango.cli -q get-users # this does work
 ```
 
-To showcase these options, consider `bar`'s `error` subcommand, which raises an
-exception:
+## Parsers
 
-```sh
-$ python -m foobar bar error
-ERROR: something went terribly wrong :[
-$ python -m foobar -q bar error # suppress output
-$ python -m foobar -t bar error # show full traceback
-ERROR: something went terribly wrong :[
-Traceback (most recent call last):
-    ...
-RuntimeError: something went terrible wrong :[
-```
+There are 4 built in parsers:
+* `pose`:
+
+    Parses a snapshot's pose, and output in a json format the translation and rotation
+  
+* `feelings`:
+
+    Parses a snapshot's feelings, and output in a json format the feelings: hunger, hapiness etc...
+    
+* `color_image`:
+    
+    Parses a snapshot's color image, saves the color image as jpg to the designated location, and output a json with it's location
+    
+* `depath_image`:
+    
+    parses a snapshot's depth image, save the depth image as a heatmap to the designated location, and output a json. 
+    
+### Write you own parsers 
+
+You can write your own parsers, that's super easy:
+1. Go to `parsers/my_parsers`
+2. A new parser is either a function that starts with parse_ and with an additional field `parser_type` that tell which parser type it accepts Or an Class called Something*Parser*. If you're using a Class please provide a parse method in the Class 
+3. The function get's a context and a snapshot decoded from proto. 
+4. The parser should return the value that the parser wants publish. 
+
+#### The `context` class:
+The context class provide the following functionality:
+* `save(data)`:
+
+    If you data support the `save` method, use this in order to save it to a designated location
+    
+* `get_save_path()`:
+
+    If you data doesn't support `save`, use this method to get where you'll need to save your data, and save it manually. 
+
+* `set_result(result)`:
+
+    In case you want to have better logic for the result you're provided, you can override the default result, and write your own. 
+        
+        
+Your new parser will be automatically collected. Note that if you created a new type of parser, you should add it to the parsers type the server knows in the config located at `config/cofig.ini`
+
+
+
