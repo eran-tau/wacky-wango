@@ -22,7 +22,7 @@ matplotlib==3.2.1
 packaging==19.2
 pluggy==0.13.1
 protobuf==3.11.3
-py==1.8.0
+py==1.10.0
 Pygments==2.4.2
 pyparsing==2.4.5
 pytest==5.3.0
